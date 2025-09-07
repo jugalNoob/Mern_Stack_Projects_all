@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "kafkajs": "^2.2.4",
+    "mongodb": "^6.15.0",
+    "mongoose": "^8.13.1",
+    "redis": "^5.0.1",
+    "shortid": "^2.2.17"
+  }
+}
