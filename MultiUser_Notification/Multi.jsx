@@ -1,3 +1,16 @@
+🚀 End-to-End Flow (after fixes)
+
+User calls /v1/signup → returns greeting instantly.
+
+Message published to Kafka → topic "NotificationQueue".
+
+Kafka consumer reads message → adds job to BullMQ.
+
+BullMQ worker processes job → emits event to client via Socket.IO.
+
+Client UI gets real-time notification (jobCompleted).
+
+
 Perfect 🚀 — I’ll polish your diagram into a professional, high-level architecture that looks clean, structured, and resume/project-doc ready.
 
 Here’s the plan for the design upgrade:
