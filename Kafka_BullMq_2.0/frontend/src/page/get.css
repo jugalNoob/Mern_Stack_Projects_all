@@ -1,0 +1,56 @@
+.get-adv-container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.filter-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+input, select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn-search {
+  grid-column: span 3;
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.results-list {
+  margin-top: 1rem;
+}
+
+.result-card {
+  padding: 0.75rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  background-color: #f9f9f9;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.info {
+  color: #008800;
+  font-size: 0.9rem;
+}
+
+.error-msg {
+  color: red;
+  font-weight: bold;
+}
