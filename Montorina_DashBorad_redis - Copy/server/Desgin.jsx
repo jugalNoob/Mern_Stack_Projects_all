@@ -28,49 +28,43 @@ Test with 50k+ WebSocket events/minute using artillery or k6.
 
 Shows you understand performance bottlenecks.
 
+                           ┌─────────────────────┐
+                           │     metrics/        │
+                           │  cpu.js  network.js │
+                           │   (collect metrics) │
+                           └──────────┬──────────┘
+                                      │
+                                      ▼
+                             ┌─────────────────┐
+                             │   publisher/    │
+                             │  publisher.js   │
+                             │ (publish to     │
+                             │  Redis channel) │
+                             └──────────┬──────┘
+                                        │
+                                        ▼
+                               ┌────────────────┐
+                               │    redis/      │
+                               │ redisClient.js │
+                               │ (Pub/Sub hub)  │
+                               └───────┬────────┘
+         ┌─────────────────────────────┼──────────────────────────────┐
+         │                             │                              │
+         ▼                             ▼                              ▼
+┌──────────────────┐          ┌─────────────────────┐        ┌───────────────────┐
+│ subscriber/      │          │ sockets/            │        │   server.js       │
+│ cpuSubscriber.js │          │ io.js (Socket.IO)   │        │ main app + routes │
+│ networkSub.js    │◄────────►│ listens to Redis,   │        │ integrates sockets │
+│ (consume metrics)│          │ sends to clients    │        │ and HTTP server   │
+└──────────────────┘          └─────────────────────┘        └───────────────────┘
+                                        │
+                                        ▼
+                               ┌────────────────┐
+                               │   Frontend UI  │
+                               │ (Dashboard via │
+                               │ Socket.IO)     │
+                               └────────────────┘
 
-             ┌─────────────────────┐
-          │   Frontend Client   │
-          │  (React / Browser) │
-          └─────────┬──────────┘
-                    │ WebSocket / Socket.IO
-                    ▼
-          ┌─────────────────────┐
-          │   Node.js Server    │
-          │  (Express + HTTP)   │
-          │  Socket.IO Rooms:   │
-          │  CPU / Network      │
-          └─────────┬──────────┘
-                    │ Emits real-time metrics
-                    ▼
-          ┌─────────────────────┐
-          │    Redis Pub/Sub    │
-          │  Channels:          │
-          │  metrics:cpu        │
-          │  metrics:network    │
-          └─────────┬──────────┘
-      publish() │          │ subscribe()
-                ▼          ▼
-        ┌─────────────┐  ┌─────────────┐
-        │ CPU Metrics │  │ Network     │
-        │ Subscriber  │  │ Subscriber  │
-        │ emits to    │  │ emits to    │
-        │ "cpu" room  │  │ "network"   │
-        └─────────────┘  └─────────────┘
-                ▲
-                │
-          ┌─────────────┐
-          │ Metrics     │
-          │ Collection  │
-          │ ┌─────────┐ │
-          │ │ CPU     │ │
-          │ │ Usage   │ │
-          │ └─────────┘ │
-          │ ┌─────────┐ │
-          │ │ Network │ │
-          │ │ Info    │ │
-          │ └─────────┘ │
-          └─────────────┘
 
 
 Metrics Collection → Publisher → Redis Pub/Sub → Subscriber → Socket.IO Room → Client
