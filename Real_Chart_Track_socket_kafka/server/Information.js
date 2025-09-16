@@ -19,6 +19,24 @@ MongoDB stores data into Live collection with schema (value, shortId, createdAt)
 Clients can also fetch saved data through /home GET API.
 
 
+         📊 Redis Pub/Sub vs Kafka Pub/Sub
+
+
+| Feature              | **Redis Pub/Sub**                                  | **Kafka Pub/Sub**                                            |
+| -------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
+| **Data Storage**     | ❌ No storage (fire-and-forget)                     | ✅ Stores messages on disk (default 7 days or more)           |
+| **Message Delivery** | Only to active subscribers                         | Consumers can join later and still read old messages         |
+| **Replay**           | ❌ Not possible                                     | ✅ Possible (can replay from beginning or any offset)         |
+| **Scalability**      | Works well for small/medium scale                  | Designed for massive scale (millions msgs/sec)               |
+| **Ordering**         | No strict guarantee                                | Ordering guaranteed **within a partition**                   |
+| **Durability**       | Lost if subscriber is offline                      | Messages persist even if consumers are offline               |
+| **Use Cases**        | Real-time chat, notifications, lightweight pub/sub | Event streaming, logs, analytics pipelines, data integration |
+| **Consumer Groups**  | Not supported (all subscribers get same message)   | Supported (messages divided among group members)             |
+| **Performance**      | Ultra-low latency, in-memory                       | High throughput, slightly more latency (disk-based)          |
+| **Best For**         | Fast, simple real-time messaging                   | Reliable, scalable, persistent event-driven systems          |
+
+         
+
 
          3️⃣ Interview Q&A (for THIS project)
 🔹 Basics
