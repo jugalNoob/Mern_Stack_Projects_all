@@ -1,3 +1,22 @@
+❓ What is Redis Pub/Sub?
+
+👉 Redis Pub/Sub (Publish/Subscribe) is a messaging system built into Redis.
+
+A publisher sends a message to a channel.
+
+All subscribers listening to that channel instantly receive the message.
+
+Messages are not stored — if no one is listening at the time, the message is lost.
+
+✅ Key Points (easy to remember):
+
+One-to-many communication → one publisher, many subscribers.
+
+Real-time, low-latency → useful for chat apps, live dashboards, notifications.
+
+No persistence → if you need message storage or replay, you’d use Redis Streams or Kafka instead.
+
+
 🔥 Interview Q&A for Your Project (Socket.IO + Redis)
 📌 Basics
 
