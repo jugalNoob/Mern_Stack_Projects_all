@@ -1,3 +1,33 @@
+Why Redis Pub/Sub works & how?
+
+Pub (Publish): You (the sender) send a message to a channel in Redis.
+
+Sub (Subscribe): Other services/clients subscribe to that channel.
+
+Redis Role: Redis is like the middleman. It instantly takes what the publisher sends and forwards it to all subscribers listening.
+
+Important: Redis does not store these messages — it’s like a live broadcast.
+
+⚡ Example Flow (Redis Pub/Sub)
+Publisher ---> Redis Channel ---> Subscribers
+
+
+👉 If nobody is subscribed, the message is just lost.
+👉 If a subscriber comes after the publish, they won’t get the old message.
+
+✅ Why use Redis Pub/Sub?
+
+Very fast (in-memory).
+
+Great for real-time notifications (chat app, live metrics, system updates).
+
+Scales well if you add Redis Cluster.
+
+❌ Not good for:
+
+Storing/replaying old data (use Kafka or Redis Streams instead).
+
+
 Kafka Example ::::::
 Exactly ✅ You nailed the YouTube analogy for Redis Pub/Sub.
 
