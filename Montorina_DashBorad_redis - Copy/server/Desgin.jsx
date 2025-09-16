@@ -1,32 +1,18 @@
-💡 Tips to Make It Even Stronger for Interviews
+🔑 Flow Explanation (in plain words)
 
-Add Load Balancing
+metrics/ collects CPU & network stats.
 
-Mention using Nginx or HAProxy to distribute clients across Node.js servers.
+publisher/ sends those stats to Redis channels.
 
-Dockerize
+redis/ is the central Pub/Sub broker.
 
-Create Docker containers for Node.js + Redis.
+subscriber/ listens to Redis, receives updates.
 
-Shows DevOps understanding.
+sockets/io.js sends data to clients using Socket.IO.
 
-Monitoring & Alerts
+server.js glues everything together (Express + Socket.IO).
 
-Add Prometheus + Grafana dashboards for CPU/Network metrics.
-
-Real-time monitoring is a big plus in interviews.
-
-Authentication
-
-Optional: Add JWT auth for clients connecting via Socket.IO.
-
-Shows security awareness.
-
-Stress Testing
-
-Test with 50k+ WebSocket events/minute using artillery or k6.
-
-Shows you understand performance bottlenecks.
+Frontend Dashboard receives real-time metrics.
 
                            ┌─────────────────────┐
                            │     metrics/        │
@@ -67,32 +53,45 @@ Shows you understand performance bottlenecks.
 
 
 
-Metrics Collection → Publisher → Redis Pub/Sub → Subscriber → Socket.IO Room → Client
+Got it 👍 You want an ASCII system design that explains how Redis Pub/Sub works in your project.
+Here’s a clean diagram:
 
-      ┌───────────────┐
-      │ Metrics       │  ← getCPUUsage(), getNetworkInfo()
-      │ Collection    │
-      │ CPU / Network │
-      └───────┬───────┘
-              │ publish()
-              ▼
-      ┌───────────────┐
-      │ Redis Pub/Sub │
-      └───────┬───────┘
-          sub │ pub
-              ▼
-      ┌───────────────┐
-      │ Subscribers   │  ← startCpuSubscriber(), startNetworkSubscriber()
-      │ CPU / Network │
-      │ emit to rooms │
-      └───────┬───────┘
-              │
-              ▼
-      ┌───────────────┐
-      │ Frontend      │
-      │ Clients       │  ← receive via Socket.IO
-      └───────────────┘
- 
+
+                   ┌─────────────────────┐
+                   │   Metrics Source    │
+                   │ (CPU, Network etc.) │
+                   └──────────┬──────────┘
+                              │
+                              ▼
+                      ┌───────────────┐
+                      │   Publisher   │
+                      │ (publish msg) │
+                      └───────┬───────┘
+                              │
+                              ▼
+                     ┌─────────────────┐
+                     │      Redis       │
+                     │   Pub / Sub Hub  │
+                     └───────┬─────────┘
+         ┌───────────────────┼───────────────────┐
+         │                   │                   │
+         ▼                   ▼                   ▼
+┌───────────────────┐  ┌───────────────────┐  ┌───────────────────┐
+│  Subscriber 1     │  │  Subscriber 2     │  │  Subscriber N     │
+│ (cpuSubscriber.js)│  │ (networkSub.js)   │  │ (other metrics)   │
+└─────────┬─────────┘  └─────────┬─────────┘  └─────────┬─────────┘
+          │                      │                      │
+          ▼                      ▼                      ▼
+  ┌─────────────────┐     ┌─────────────────┐    ┌─────────────────┐
+  │   Socket.IO      │     │   Socket.IO      │    │   Socket.IO      │
+  │ (send to client) │     │ (send to client) │    │ (send to client) │
+  └─────────┬────────┘     └─────────┬────────┘    └─────────┬────────┘
+            │                        │                       │
+            ▼                        ▼                       ▼
+     ┌───────────────┐        ┌───────────────┐       ┌───────────────┐
+     │   Client 1    │        │   Client 2    │       │   Client N    │
+     │ (Dashboard)   │        │ (Dashboard)   │       │ (Dashboard)   │
+     └───────────────┘        └───────────────┘       └───────────────┘
 
 
 
